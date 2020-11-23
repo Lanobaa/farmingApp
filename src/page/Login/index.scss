@@ -1,0 +1,125 @@
+.login {
+  width: 100vw;
+  height: 100vh;
+  background: url('../../assets/bg.png') no-repeat center center;
+  background-size: cover;
+  .content {
+    width: 1400px;
+    height: 100vh;
+    margin: auto;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    align-items: center;
+
+    .header {
+      width: 100%;
+      .logo {
+        padding-top: 20px;
+        width: 540px;
+        img {
+          width: 100%;
+          height: auto;
+        }
+      }
+    }
+    .section {
+      .center {
+        width: 504px;
+        height: 366px;
+        background: #fff;
+        border-radius: 6px;
+        box-shadow: 0 3px 18px rgba(0, 0, 0, 0.3);
+        position: relative;
+        .title {
+          position: absolute;
+          top: -150px;
+          left: 0;
+          right: 0;
+          margin: auto;
+          z-index: 1;
+          color: #fff;
+          text-align: center;
+          span {
+            line-height: 60px;
+            font-size: 60px;
+            font-weight: bold;
+          }
+          p {
+            margin-top: 20px;
+            padding: 0;
+            line-height: 26px;
+            font-size: 26px;
+            font-weight: bold;
+          }
+        }
+        .container {
+          & > span {
+            display: block;
+            padding: 25px 0;
+            text-align: center;
+            font-size: 18px;
+            color: #202b43;
+            font-weight: bold;
+          }
+          form {
+            padding: 0 50px;
+            input {
+              border-radius: 6px;
+            }
+            .ant-form-item-control-input-content {
+              & > input {
+                height: 46px;
+              }
+            }
+            .ant-input-password-large {
+              height: 46px;
+              border-radius: 6px;
+            }
+            .remember {
+              .ant-form-item-control-input-content {
+                display: flex;
+                flex-flow: row nowrap;
+                justify-content: flex-end;
+                align-items: center;
+              }
+            }
+            button { height: 46px; }
+          }
+        }
+      }
+    }
+    .footer {
+      width: 100%;
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      color: #fff;
+      padding-bottom: 40px;
+      div {
+        &:last-child {
+          display: flex;
+          flex-flow: row nowrap;
+          justify-content: flex-end;
+          align-items: center;
+          a {
+            font-weight: bold;
+            display: block;
+            border-right: 1px solid #fff;
+            padding: 0 40px;
+            color: #fff;
+            &:hover {
+              cursor: pointer;
+              color: #000;
+            }
+            &:last-child {
+              border-right: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+}

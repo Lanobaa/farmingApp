@@ -1,0 +1,25 @@
+.home {
+  .logo {
+    font-size: 22px;
+    color: #fff;
+    float: left;
+    margin-right: 40px;
+  }
+  .menuWater {
+    .ant-menu-item-selected {
+      position: relative;
+      &:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        margin: auto;
+        background: rgba(0,0,0,0.2);
+        z-index: 2;
+        height: 5px;
+        border-radius:5px;
+      }
+    }
+  }
+}

@@ -1,0 +1,229 @@
+.sketch {
+  width: 1400px;
+  margin: auto;
+  .s_title {
+    font-size: 20px;
+    color: #2c2c2c;
+    padding: 26px 0;
+  }
+  .sketch-wrap {
+    position: relative;
+    img {
+      display: block;
+      width: 100%;
+    }
+    & > div {
+      position: relative;
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: center;
+      align-items: center;
+      span {
+        width: 100px;
+        display: block;
+        font-size: 16px;
+        color: #565656;
+        text-align: center;
+        position: absolute;
+        bottom: -40px;
+        left: 50%;
+        margin-left: -50px;
+        z-index: 1;
+      }
+    }
+    .pump {
+      width: 90px;
+      position: absolute;
+      top: 78px;
+      left: -40px;
+      z-index: 1;
+    }
+    .manure {
+      width: 90px;
+      position: absolute;
+      top: 248px;
+      left: 120px;
+      z-index: 1;
+    }
+    .meter {
+      width: 50px;
+      position: absolute;
+      top: 78px;
+      left: 180px;
+      z-index: 2;
+    }
+    .valve {
+      width: 30px;
+      height: 62px;
+      background: url('../../assets/valve.png');
+      background-size: 100% 100%;
+      position: absolute;
+      top: 16px;
+      left: 396px;
+      z-index: 3;
+      cursor: pointer;
+      transition: all 300ms;
+      &:hover {
+        background: url('../../assets/valve_h.png');
+        background-size: 100% 100%;
+        transform: scale(1.1);
+      }
+      &.active {
+        background: url('../../assets/valve_h.png');
+        background-size: 100% 100%;
+        transform: scale(1.1);
+      }
+    }
+
+    .valve5 {
+      width: 30px;
+      height: 62px;
+      background: url('../../assets/valve.png');
+      background-size: 100% 100%;
+      position: absolute;
+      top: 238px;
+      left: 576px;
+      z-index: 3;
+      cursor: pointer;
+      transition: all 300ms;
+      &:hover {
+        background: url('../../assets/valve_h.png');
+        background-size: 100% 100%;
+        transform: scale(1.1);
+      }
+      &.active5 {
+        background: url('../../assets/valve_h.png');
+        background-size: 100% 100%;
+        transform: scale(1.1);
+      }
+    }
+    .pools {
+      width: 160px;
+      position: absolute;
+      top: -25px;
+      left: 506px;
+      z-index: 4;
+    }
+    .valve2 {
+      width: 30px;
+      height: 62px;
+      background: url('../../assets/valve.png');
+      background-size: 100% 100%;
+      position: absolute;
+      top: 16px;
+      left: 760px;
+      z-index: 5;
+      cursor: pointer;
+      transition: all 300ms;
+      &:hover {
+        background: url('../../assets/valve_h.png');
+        background-size: 100% 100%;
+        transform: scale(1.1);
+      }
+      &.active2 {
+        background: url('../../assets/valve_h.png');
+        background-size: 100% 100%;
+        transform: scale(1.1);
+      }
+    }
+    .bucket {
+      width: 190px;
+      position: absolute;
+      top: 20px;
+      left: 945px;
+      z-index: 6;
+      p {
+        position: absolute;
+        top: 140px;
+        right: -120px;
+        z-index: 2;
+      }
+    }
+    .open {
+      width: 58px;
+      height: 64px;
+      position: absolute;
+      top: 34px;
+      left: 1255px;
+      z-index: 6;
+      cursor: pointer;
+      background: url('../../assets/open.png');
+      background-size: 100% 100%;
+      transition: all 300ms;
+
+      &:hover {
+        background: url('../../assets/open_hover.png');
+        background-size: 100% 100%;
+        transform: scale(1.1);
+      }
+      &.active3 {
+        background: url('../../assets/open_hover.png');
+        background-size: 100% 100%;
+        transform: scale(1.1);
+      }
+    }
+    .valve4 {
+      width: 62px;
+      height: 30px;
+      position: absolute;
+      top: 227px;
+      left: 1320px;
+      z-index: 7;
+      cursor: pointer;
+      background: url('../../assets/valve2.png');
+      background-size: 100% 100%;
+      transition: all 300ms;
+      &:hover {
+        background: url('../../assets/valve2_h.png');
+        background-size: 100% 100%;
+        transform: scale(1.1);
+      }
+      &.active4{
+        background: url('../../assets/valve2_h.png');
+        background-size: 100% 100%;
+        transform: scale(1.1);
+      }
+      span {
+        position: absolute;
+        top: 3px;
+        left: -45px;
+      }
+    }
+    .what {
+      width: 80px;
+      position: absolute;
+      top: 351px;
+      left: 1200px;
+      z-index: 7;
+    }
+    .farmlandOne {
+      width: 300px;
+      position: absolute;
+      top: 498px;
+      left: 132px;
+      z-index: 7;
+    }
+    .farmlandTwo {
+      width: 300px;
+      position: absolute;
+      top: 498px;
+      left: 920px;
+      z-index: 7;
+    }
+    .temperature {
+      width: 50px;
+      position: absolute;
+      top: 498px;
+      left: 580px;
+      z-index: 7;
+    }
+    .humidity {
+      width: 50px;
+      position: absolute;
+      top: 498px;
+      left: 730px;
+      z-index: 7;
+    }
+  }
+
+}

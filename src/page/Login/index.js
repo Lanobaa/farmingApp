@@ -1,7 +1,11 @@
 import React from "react";
-import {Form, Input, Button, Checkbox} from 'antd';
+import {Form, Input, Button, Checkbox, message} from 'antd';
 import logo from '../../assets/w-logo.png';
 import './index.scss';
+import requestFun from '../../services/fetch';
+import {env} from '../../utils';
+
+const {post} = requestFun;
 
 const layout = {
   labelCol: { span: 0 },
@@ -11,13 +15,21 @@ const tailLayout = {
   wrapperCol: { offset: 0, span: 24 },
 };
 
-const LoginPage = (props) => {
-  const onFinish = values => {
+const LoginPage = props => {
+  const onFinish = async values => {
     console.log('Success:', values);
+    const res = await post(`${env.api}/logon/authentication`, values);
+    const {success, message:msg} = res;
+    if (success) {
+      message.success(msg);
+      props.history.push('/home/index');
+    } else {
+      message.error(msg);
+    }
   };
 
   const onFinishFailed = errorInfo => {
-    props.history.push('/home/index');
+    // props.history.push('/home/index');
     console.log('Failed:', errorInfo);
   };
   return (
@@ -42,13 +54,13 @@ const LoginPage = (props) => {
                     onFinishFailed={onFinishFailed}
                 >
                   <Form.Item
-                      name="username"
+                      name="loginName"
                       rules={[{ required: true, message: '请输入用户名!' }]}
                   >
                     <Input size="large" placeholder="请输入帐号" />
                   </Form.Item>
                   <Form.Item
-                      name="password"
+                      name="loginPswd"
                       rules={[{ required: true, message: '请输入密码!' }]}
                   >
                     <Input.Password size="large" placeholder="请输入密码" />

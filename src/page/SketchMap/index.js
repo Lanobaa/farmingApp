@@ -1,4 +1,4 @@
-import React, {useRef, useState, useEffect} from 'react';
+import React, {useRef, useState, useEffect, message} from 'react';
 import './index.scss';
 import pump from '../../assets/pump.png';
 import meter from '../../assets/meter.png';
@@ -9,7 +9,10 @@ import farmland from '../../assets/farmland1.png';
 import wendu from '../../assets/wendu.png';
 import shidu from '../../assets/shidu.png';
 import Curve from '../Curve';
+import requestFun from '../../services/fetch';
+import {env} from "../../utils";
 
+const {get, post} = requestFun;
 
 const drawLine = (ctx, points) => {
   ctx.strokeStyle = '#DDDDDD';
@@ -75,6 +78,7 @@ const draw = canvas => {
 };
 
 
+
 const SketchMap = () => {
   const canvasRef = useRef(null);
   const [active1, setActive1] = useState(false);
@@ -82,7 +86,55 @@ const SketchMap = () => {
   const [active3, setActive3] = useState(false);
   const [active4, setActive4] = useState(false);
   const [active5, setActive5] = useState(false);
+
+  const [data, setData] = useState({
+    ST: '',
+    SM: '',
+    IF: '',
+    OF: '',
+    IW: '',
+    OW: '',
+    WP: '',
+    FP: '',
+    FS: '',
+    FPW: '',
+    WPW: '',
+    MPP: '',
+    FC: '',
+  });
+
   const speed = 10;
+
+  // 初始化接口
+  const initGetSoils = async id => {
+    const res = await get(`${env.api}/soil/home/sketch/${id}`);
+    const {success, object} = res;
+    if (success) {
+      const dataObj = {};
+      object.forEach(item => {
+        dataObj[item.symbol] = item.text;
+        dataObj[`id${item.symbol}`] = item.pointId;
+      });
+      setData(dataObj);
+
+      if (dataObj.IF === '开') { manureSwitch() }
+      if (dataObj.OF === '开') { outManureSwitch() }
+      if (dataObj.IW === '开') { inWaterSwitch() }
+      if (dataObj.OW === '开') { outWaterSwitch() }
+      if (dataObj.FP === '开') { openSwitch() }
+    }
+
+  };
+
+  const setOperationFn = async obj => {
+    const res = await post(`${env.api}/soil/home/operation`, obj);
+    const {success} = res;
+    if (success) {
+      message.success('设置开关成功');
+    }
+  };
+
+
   useEffect(() => {
     const canvas = document.getElementById('waterSketch');
     if (canvas.getContext) {
@@ -90,6 +142,15 @@ const SketchMap = () => {
     } else {
       console.log('您的浏览器不支持Canvas')
     }
+    const initSoils = async () => {
+      const res = await get(`${env.api}/soil/home/all/soils`);
+      const {success, object = []} = res;
+      if (success) {
+        // initGetSoils(object[0].id)
+        initGetSoils('O0');
+      }
+    };
+    initSoils();
   }, []);
 
   const drawLines = (ctx, x1, y1, x2, y2) => {
@@ -151,8 +212,13 @@ const SketchMap = () => {
       [350, 50],
       [580, 50],
     ];
-    lineMove(onePoints, '#8BB5FF', '#193ffe', 0, 100, 580, 50);
-    setActive1(true);
+    if (active1) {
+      lineMove(onePoints, '#DDD', '#DDD', 0, 100, 580, 50);
+      setActive1(false);
+    } else {
+      lineMove(onePoints, '#8BB5FF', '#193ffe', 0, 100, 580, 50);
+      setActive1(true);
+    }
   };
 
   const outWaterSwitch = () => {
@@ -162,8 +228,22 @@ const SketchMap = () => {
       [890, 100],
       [980, 100],
     ];
-    lineMove(twoPoints, '#8BB5FF', '#193ffe', 600,50, 980, 100);
-    setActive2(true);
+
+    if (active2) {
+      setActive2(false);
+      lineMove(twoPoints, '#DDD', '#DDD', 600,50, 980, 100);
+      // setOperationFn({
+      //   pointId: data[`idOW`],
+      //   value: 0
+      // });
+    } else {
+      setActive2(true);
+      lineMove(twoPoints, '#8BB5FF', '#193ffe', 600,50, 980, 100);
+      // setOperationFn({
+      //   pointId: data[`idOW`],
+      //   value: 0
+      // });
+    }
   };
 
   const openSwitch = () => {
@@ -172,8 +252,13 @@ const SketchMap = () => {
       [1350, 87],
       [1350, 237],
     ];
-    lineMove(fourPoints, '#8BB5FF', '#193ffe', 1000,80, 1350, 237);
-    setActive3(true);
+    if (active3) {
+      lineMove(fourPoints, '#DDD', '#DDD', 1000,80, 1350, 237);
+      setActive3(false);
+    } else {
+      lineMove(fourPoints, '#8BB5FF', '#193ffe', 1000,80, 1350, 237);
+      setActive3(true);
+    }
   };
 
   const manureSwitch = () => {
@@ -185,8 +270,13 @@ const SketchMap = () => {
       [890, 100],
       [980, 100],
     ];
-    lineMove(threePoints, '#8BB5FF', '#193ffe', 190,270, 980, 100);
-    setActive5(true);
+    if (active5) {
+      setActive5(false);
+      lineMove(threePoints, '#DDD', '#DDD', 190,270, 980, 100);
+    } else {
+      setActive5(true);
+      lineMove(threePoints, '#8BB5FF', '#193ffe', 190,270, 980, 100);
+    }
   };
 
   const outManureSwitch = () => {
@@ -197,8 +287,14 @@ const SketchMap = () => {
       [1070, 430],
       [1070, 498],
     ];
-    lineMove(fivePoints, '#8BB5FF', '#193ffe', 1350,250, 1070, 490);
-    setActive4(true);
+
+    if (active4) {
+      lineMove(fivePoints, '#DDD', '#DDD', 1350,250, 1070, 490);
+      setActive4(false);
+    } else {
+      lineMove(fivePoints, '#8BB5FF', '#193ffe', 1350,250, 1070, 490);
+      setActive4(true);
+    }
   };
 
   const outManureSwitch2 = () => {
@@ -208,7 +304,11 @@ const SketchMap = () => {
       [290, 430],
       [290, 498],
     ];
-    lineMove(sixPoints, '#8BB5FF', '#193ffe', 1350,250, 290, 490);
+    if (active4) {
+      lineMove(sixPoints, '#DDD', '#DDD', 1350,250, 290, 490);
+    } else {
+      lineMove(sixPoints, '#8BB5FF', '#193ffe', 1350,250, 290, 490);
+    }
   };
 
   return (
@@ -222,53 +322,54 @@ const SketchMap = () => {
               id="waterSketch"
               width="1400"
               height="700"
-              onClick={e => {
-
-              }}
           >您的浏览器不支持canvas
           </canvas>
 
           <div className="pump">
             <img src={pump} alt=""/>
-            <span>水泵</span>
+            <span>水泵- {data.WP}</span>
           </div>
           <div className="meter">
             <img src={meter} alt=""/>
-            <span>水表</span>
+            <span>水肥机出水量{data.FPW}</span>
+          </div>
+          <div className="meter2">
+            <img src={meter} alt=""/>
+            <span>肥料泵出水量{data.WPW}</span>
           </div>
           <div className={`valve ${active1 ? 'active' : ''}`} onClick={inWaterSwitch}>
-            <span>进水开关</span>
+            <span>进水- {data.IW}</span>
           </div>
           <div className="pools">
             <img src={pool} alt=""/>
             <span>蓄水池</span>
           </div>
           <div className={`valve2 ${active2 ? 'active2' : ''}`} onClick={outWaterSwitch}>
-            <span>出水开关</span>
+            <span>出水- {data.OW}</span>
           </div>
           <div className="bucket">
             <img src={bucket} alt=""/>
             <span>肥料罐</span>
-            <p>——肥料液位置：3456</p>
+            <p>——肥料液位置：{data.FC}</p>
           </div>
           <div className={`open ${active3 ? 'active3' : ''}`} onClick={openSwitch}>
-            <span>肥料罐开关</span>
+            <span>肥料罐- {data.FP}</span>
           </div>
           <div className={`valve4 ${active4 ? 'active4' : ''}`} onClick={outManureSwitch}>
-            <span>出肥开关</span>
+            <span>出肥 - {data.OF}</span>
           </div>
           <div className="what">
-            <span>主管压力</span>
+            <span>主管压力{data.MPP}</span>
             <img src={what} alt=""/>
           </div>
 
-          <div className={`valve5 ? ${active5 ? 'active5' : ''}`} onClick={manureSwitch}>
-            <span>进肥料开关</span>
+          <div className={`valve5 ${active5 ? 'active5' : ''}`} onClick={manureSwitch}>
+            <span>进肥料 - {data.IF}</span>
           </div>
 
           <div className="manure">
             <img src={pump} alt=""/>
-            <span>肥料泵</span>
+            <span>肥料泵-{data.FP}</span>
           </div>
 
           <div className="farmlandOne">
@@ -282,11 +383,11 @@ const SketchMap = () => {
 
           <div className="temperature">
             <img src={wendu} alt=""/>
-            <span>土壤温度：36</span>
+            <span>土壤温度：{data.SM}</span>
           </div>
           <div className="humidity">
             <img src={shidu} alt=""/>
-            <span>土壤湿度：23</span>
+            <span>土壤湿度：{data.ST}</span>
           </div>
         </div>
         <Curve />

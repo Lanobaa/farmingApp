@@ -19,7 +19,7 @@
       justify-content: center;
       align-items: center;
       span {
-        width: 100px;
+        width: 180px;
         display: block;
         font-size: 16px;
         color: #565656;
@@ -27,7 +27,7 @@
         position: absolute;
         bottom: -40px;
         left: 50%;
-        margin-left: -50px;
+        margin-left: -90px;
         z-index: 1;
       }
     }
@@ -50,6 +50,13 @@
       position: absolute;
       top: 78px;
       left: 180px;
+      z-index: 2;
+    }
+    .meter2 {
+      width: 50px;
+      position: absolute;
+      top: 246px;
+      left: 290px;
       z-index: 2;
     }
     .valve {
@@ -82,7 +89,7 @@
       background-size: 100% 100%;
       position: absolute;
       top: 238px;
-      left: 576px;
+      left: 646px;
       z-index: 3;
       cursor: pointer;
       transition: all 300ms;

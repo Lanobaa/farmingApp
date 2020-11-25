@@ -3,6 +3,7 @@ import {Form, Row, Col, Input, Button, Select, DatePicker, Table} from 'antd';
 import locale from 'antd/lib/date-picker/locale/zh_CN';
 import 'moment/locale/zh-cn';
 import moment from 'moment';
+import {isNotNull} from '../../utils';
 import './index.scss';
 import {env} from "../../utils";
 import requestFun from '../../services/fetch';
@@ -21,10 +22,12 @@ const {Option} = Select;
 
 const OrderList = () => {
   const [form] = Form.useForm();
+  const formRef = React.createRef()
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
+    total: 1,
   });
   const [dataSource, setDataSource] = useState([]);
   const [soils, setSoils] = useState([]);
@@ -62,29 +65,41 @@ const OrderList = () => {
     },
   ];
 
-  const handleTableChange = pagination => {
-    console.log('is-pa-', pagination);
-    setPagination(pagination);
-  };
-  async function initUserListData(val = {
-    soilId: '',
-    startTime: '',
-    endTime: '',
-    limit: '',
-  }) {
+  async function initUserListData(val) {
     const res = await post(`${env.api}/soil/table/curValue`, val);
-    const {success, object} = res;
+    const {success, object, current, pageSize, totalCount} = res;
+    console.log('new-res---', res);
     if (success) {
+      setPagination({
+        current,
+        pageSize,
+        total: totalCount
+      })
       setDataSource(object);
     }
   }
-  const onFinish = async values => {
+
+  const handleTableChange = pagination => {
+    // 获取当前表单的参数
+    const values = formRef.current.getFieldsValue();
+    const val = {
+      ...values,
+      ...pagination,
+      startTime: isNotNull(values.time) ? moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss') : '',
+      endTime: isNotNull(values.time) ? moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss') : '',
+    };
+    initUserListData(val)
+  };
+
+  const onFinish = values => {
     console.log('Received values of form: ', values);
-    const res = await initUserListData(values);
-    const {success, object} = res;
-    if (success) {
-      setDataSource(object);
-    }
+    const val = {
+      ...values,
+      ...pagination,
+      startTime: isNotNull(values.time) ? moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss') : '',
+      endTime: isNotNull(values.time) ? moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss') : '',
+    };
+    initUserListData(val);
   };
 
 
@@ -114,6 +129,7 @@ const OrderList = () => {
           <div className="f_title">申请单管理</div>
           <Form
               {...formItemLayout}
+              ref={formRef}
               form={form}
               onFinish={onFinish}
               initialValues={{

@@ -1,5 +1,5 @@
 import React, {useRef, useState, useEffect} from 'react';
-import {message} from 'antd';
+import {message, Select} from 'antd';
 import './index.scss';
 import pump from '../../assets/pump.png';
 import meter from '../../assets/meter.png';
@@ -11,7 +11,7 @@ import wendu from '../../assets/wendu.png';
 import shidu from '../../assets/shidu.png';
 import Curve from '../Curve';
 import requestFun from '../../services/fetch';
-import {env} from "../../utils";
+import {env, isNotNull} from "../../utils";
 
 const {get, post} = requestFun;
 
@@ -79,7 +79,6 @@ const draw = canvas => {
 };
 
 
-
 const SketchMap = () => {
   const canvasRef = useRef(null);
   const [active1, setActive1] = useState(false);
@@ -93,7 +92,7 @@ const SketchMap = () => {
     IW: '', OW: '', WP: '', FP: '', FS: '', FPW: '',
     WPW: '', MPP: '', FC: '',
   });
-  const [soil, setSoil] = useState({});
+  const [soil, setSoil] = useState([]);
   const [chart, setChart] = useState({});
 
   const speed = 10;
@@ -129,10 +128,10 @@ const SketchMap = () => {
     ];
     if (active2) {
       setActive2(false);
-      lineMove(twoPoints, '#DDD', '#DDD', 600,50, 980, 100);
+      lineMove(twoPoints, '#DDD', '#DDD', 600, 50, 980, 100);
     } else {
       setActive2(true);
-      lineMove(twoPoints, '#8BB5FF', '#193ffe', 600,50, 980, 100);
+      lineMove(twoPoints, '#8BB5FF', '#193ffe', 600, 50, 980, 100);
     }
   };
   const outWaterSwitch = async () => {
@@ -150,10 +149,10 @@ const SketchMap = () => {
       [1350, 237],
     ];
     if (active3) {
-      lineMove(fourPoints, '#DDD', '#DDD', 1000,80, 1350, 237);
+      lineMove(fourPoints, '#DDD', '#DDD', 1000, 80, 1350, 237);
       setActive3(false);
     } else {
-      lineMove(fourPoints, '#8BB5FF', '#193ffe', 1000,80, 1350, 237);
+      lineMove(fourPoints, '#8BB5FF', '#193ffe', 1000, 80, 1350, 237);
       setActive3(true);
     }
   };
@@ -176,10 +175,10 @@ const SketchMap = () => {
     ];
     if (active5) {
       setActive5(false);
-      lineMove(threePoints, '#DDD', '#DDD', 190,270, 980, 100);
+      lineMove(threePoints, '#DDD', '#DDD', 190, 270, 980, 100);
     } else {
       setActive5(true);
-      lineMove(threePoints, '#8BB5FF', '#193ffe', 190,270, 980, 100);
+      lineMove(threePoints, '#8BB5FF', '#193ffe', 190, 270, 980, 100);
     }
   };
   const manureSwitch = async () => {
@@ -200,10 +199,10 @@ const SketchMap = () => {
     ];
 
     if (active4) {
-      lineMove(fivePoints, '#DDD', '#DDD', 1350,250, 1070, 490);
+      lineMove(fivePoints, '#DDD', '#DDD', 1350, 250, 1070, 490);
       setActive4(false);
     } else {
-      lineMove(fivePoints, '#8BB5FF', '#193ffe', 1350,250, 1070, 490);
+      lineMove(fivePoints, '#8BB5FF', '#193ffe', 1350, 250, 1070, 490);
       setActive4(true);
     }
   };
@@ -215,9 +214,9 @@ const SketchMap = () => {
       [290, 498],
     ];
     if (active4) {
-      lineMove(sixPoints, '#DDD', '#DDD', 1350,250, 290, 490);
+      lineMove(sixPoints, '#DDD', '#DDD', 1350, 250, 290, 490);
     } else {
-      lineMove(sixPoints, '#8BB5FF', '#193ffe', 1350,250, 290, 490);
+      lineMove(sixPoints, '#8BB5FF', '#193ffe', 1350, 250, 290, 490);
     }
   };
   const outManureSwitch = async () => {
@@ -239,11 +238,21 @@ const SketchMap = () => {
       });
       setData(dataObj);
 
-      if (dataObj.IF === '开') { drawManureSwitch() }
-      if (dataObj.OF === '开') { drawOutManureSwitch() }
-      if (dataObj.IW === '开') { drawInWaterSwitch() }
-      if (dataObj.OW === '开') { drawOutWaterSwitch() }
-      if (dataObj.FP === '开') { drawOpenSwitch() }
+      if (dataObj.IF === '开') {
+        drawManureSwitch()
+      }
+      if (dataObj.OF === '开') {
+        drawOutManureSwitch()
+      }
+      if (dataObj.IW === '开') {
+        drawInWaterSwitch()
+      }
+      if (dataObj.OW === '开') {
+        drawOutWaterSwitch()
+      }
+      if (dataObj.FP === '开') {
+        drawOpenSwitch()
+      }
     }
   };
 
@@ -284,6 +293,7 @@ const SketchMap = () => {
         await initEChartsData('O0');
       }
     }
+
     await initSoils();
   }, []);
 
@@ -297,9 +307,12 @@ const SketchMap = () => {
     // ctx.restore();
   };
 
-  const lineMove = (points, color1, color2, cx1, cy1, cx2,cy2) => {
+  const lineMove = (points, color1, color2, cx1, cy1, cx2, cy2) => {
     let ele = canvasRef.current;
-    if (!ele) {return};
+    if (!ele) {
+      return
+    }
+    ;
     let ctx = ele.getContext('2d');
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
@@ -317,7 +330,7 @@ const SketchMap = () => {
     let dy = y2 - y1;
     if (Math.abs(dx) < 1 && Math.abs(dy) < 1) {
       points = points.slice(1);
-      lineMove(points, color1, color2,  cx1, cy1, cx2,cy2);
+      lineMove(points, color1, color2, cx1, cy1, cx2, cy2);
       return;
     }
     let x = x1,
@@ -333,19 +346,36 @@ const SketchMap = () => {
       x += (speed * dx) / Math.abs(dx);
       y += (speed * rate * dx) / Math.abs(dx);
     }
-    drawLines(ctx, x1,y1, x, y);
+    drawLines(ctx, x1, y1, x, y);
     points[0] = [x, y];
-    window.requestAnimationFrame(function() {
-      lineMove(points, color1, color2,  cx1, cy1, cx2,cy2);
+    window.requestAnimationFrame(function () {
+      lineMove(points, color1, color2, cx1, cy1, cx2, cy2);
     })
   };
 
+  const handleSelectChange = val => {
+    console.log('val---',val);
+    initGetSoils(val);
+  }
   return (
       <div className="sketch">
         <div className="s_title">
           水肥系统示意图
         </div>
         <div className="sketch-wrap">
+          <b className="selectPo">
+            <span>当前地块:</span>
+            <Select
+                defaultValue={isNotNull(soil) ? Object.keys(soil[0])[0] : ''}
+                style={{width: '70%'}}
+                onChange={handleSelectChange}
+            >
+              {soil.map(item => <Select.Option value={Object.keys(item)[0]} key={Object.keys(item)[0]}>
+                {item[Object.keys(item)]}
+              </Select.Option>)}
+
+            </Select>
+          </b>
           <canvas
               ref={canvasRef}
               id="waterSketch"
@@ -419,7 +449,7 @@ const SketchMap = () => {
             <span>土壤湿度：{data.ST}</span>
           </div>
         </div>
-        <Curve data={chart} />
+        <Curve data={chart}/>
       </div>
   )
 };

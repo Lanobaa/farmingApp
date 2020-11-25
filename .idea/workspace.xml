@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="aeed1c96-ee97-4e8f-bae7-649c32305314" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/page/Curve/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/page/Curve/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/page/OrderList/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/page/OrderList/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/page/SketchMap/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/page/SketchMap/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils.js" afterDir="false" />
-    </list>
+    <list default="true" id="aeed1c96-ee97-4e8f-bae7-649c32305314" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -21,7 +15,7 @@
     <session id="-1216478407">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="3" />
+          <entry key="project.closed" value="4" />
           <entry key="project.open.time.0" value="1" />
           <entry key="project.open.time.1" value="1" />
           <entry key="project.open.time.4" value="1" />
@@ -98,8 +92,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/page/OrderList/index.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="709">
-                  <caret line="170" column="28" lean-forward="true" selection-start-line="170" selection-start-column="28" selection-end-line="170" selection-end-column="28" />
+                <state relative-caret-position="326">
+                  <caret line="176" lean-forward="true" selection-start-line="176" selection-end-line="176" />
                   <folding>
                     <element signature="e#630#714#0" />
                     <element signature="e#734#1105#0" />
@@ -126,8 +120,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/page/OrderList/index.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="459">
-                  <caret line="279" column="39" lean-forward="true" selection-start-line="279" selection-start-column="39" selection-end-line="279" selection-end-column="39" />
+                <state relative-caret-position="329">
+                  <caret line="274" column="48" selection-start-line="274" selection-start-column="48" selection-end-line="274" selection-end-column="48" />
                   <folding>
                     <element signature="e#0#49#0" expanded="true" />
                     <element signature="e#630#714#0" />
@@ -498,12 +492,12 @@
       <workItem from="1605943363318" duration="72254000" />
       <workItem from="1606214602442" duration="17029000" />
       <workItem from="1606270248954" duration="252000" />
-      <workItem from="1606276306558" duration="5709000" />
+      <workItem from="1606276306558" duration="5836000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="95244000" />
+    <option name="totallyTimeSpent" value="95371000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -516,9 +510,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="32" y="25" width="1648" height="1025" extended-state="0" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.121696375" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.121696375" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -532,7 +525,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="10" weight="0.33117583" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.33117583" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -763,8 +756,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/page/OrderList/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="709">
-          <caret line="170" column="28" lean-forward="true" selection-start-line="170" selection-start-column="28" selection-end-line="170" selection-end-column="28" />
+        <state relative-caret-position="326">
+          <caret line="176" lean-forward="true" selection-start-line="176" selection-end-line="176" />
           <folding>
             <element signature="e#630#714#0" />
             <element signature="e#734#1105#0" />

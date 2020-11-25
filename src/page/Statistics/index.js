@@ -6,20 +6,14 @@ import moment from 'moment';
 import './index.scss';
 import {env} from "../../utils";
 import requestFun from '../../services/fetch';
-const {get,post} = requestFun;
+const {post} = requestFun;
 
-const defaultSelectDate = {
-  startDate: moment().subtract( 7, 'day' ).hour( 23 ).minute( 59 ).second( 59 ),
-  endDate: moment().endOf( 'day' )
-};
 
 moment.locale('zh-cn');
 
 const {RangePicker} = DatePicker;
 
-const {Option} = Select;
-
-const OrderList = () => {
+const StatisticsList = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState({
@@ -27,7 +21,6 @@ const OrderList = () => {
     pageSize: 10,
   });
   const [dataSource, setDataSource] = useState([]);
-  const [soils, setSoils] = useState([]);
 
 
   const formItemLayout = {
@@ -45,21 +38,21 @@ const OrderList = () => {
       hidden: true
     },
     {
+      title: '日期',
+      dataIndex: 'curTime',
+    },
+    {
       title: '地块名称',
       dataIndex: 'soilName',
     },
     {
-      title: '设备名称',
-      dataIndex: 'pointName',
+      title: '肥料使用量',
+      dataIndex: 'count',
     },
     {
-      title: '实时值',
-      dataIndex: 'text',
-    },
-    {
-      title: '接收时间',
-      dataIndex: 'receiveTime',
-    },
+      title: '水肥机出水量',
+      dataIndex: 'waterCount',
+    }
   ];
 
   const handleTableChange = pagination => {
@@ -72,7 +65,7 @@ const OrderList = () => {
     endTime: '',
     limit: '',
   }) {
-    const res = await post(`${env.api}/soil/table/curValue`, val);
+    const res = await post(`${env.api}/soil/table/water/statistics`, val);
     const {success, object} = res;
     if (success) {
       setDataSource(object);
@@ -86,32 +79,14 @@ const OrderList = () => {
       setDataSource(object);
     }
   };
-
-
-
-  const initSelect=async ()=>{
-    const res = await get(`${env.api}/soil/home/all/soils`);
-    const {success, object = []} = res;
-    if (success) {
-      const  data = [];
-      for( let i in object){
-        for(let key in object[i]){
-          data.push(<Option key={key}>{object[i][key]}</Option>)
-        }
-      }
-      console.log(data);
-      setSoils(data);
-    }
-  };
   useEffect(async () => {
-    await initUserListData();
-    await initSelect();
+    await initUserListData()
   }, []);
 
   return (
       <div className="list">
         <div className="formHeader">
-          <div className="f_title">申请单管理</div>
+          <div className="f_title">灌溉统计</div>
           <Form
               {...formItemLayout}
               form={form}
@@ -123,38 +98,39 @@ const OrderList = () => {
             <Row>
               <Col span={8}>
                 <Form.Item
-                    name="soilId"
-                    label="地块"
+                    name="status"
+                    label="状态"
                     rules={[
                       {
+                        required: true,
                         message: '请输入申请单号',
                       },
                     ]}
                 >
-                  <Select
-                      showArrow={false}
-                      placeholder="请输入地块..."
-                  >
-                    {soils}
+                  <Select>
+                    <Select.Option value="0">全部</Select.Option>
+                    <Select.Option value="1">一</Select.Option>
+                    <Select.Option value="2">二</Select.Option>
                   </Select>
                 </Form.Item>
               </Col>
+            </Row>
+            <Row>
               <Col span={8}>
                 <Form.Item
                     name="time"
-                    label="起止时间"
+                    label="操作时间"
                     rules={[
                       {
                         type: 'array',
+                        required: true,
                         message: '请选择时间',
                       },
                     ]}
                 >
                   <RangePicker
-                      locale={locale}
                       ranges={{
-                        '近7天': [ defaultSelectDate.startDate, defaultSelectDate.endDate ],
-                        '近30天': [ moment().subtract( 30, 'day' ).hour( 23 ).minute( 59 ).second( 59 ), defaultSelectDate.endDate ]
+                        Today: [moment(), moment()]
                       }}
                       format="YYYY-MM-DD"
                       style={{width: '100%'}}
@@ -175,7 +151,8 @@ const OrderList = () => {
         </div>
         <div className="f_table">
           <div className="f_top">
-            <div className="f_title">历史数据查询</div>
+            <div className="f_title">灌溉统计列表</div>
+            <Button type="primary">导出</Button>
           </div>
           <Table
               loading={loading}
@@ -190,4 +167,4 @@ const OrderList = () => {
   )
 };
 
-export default OrderList;
+export default StatisticsList;

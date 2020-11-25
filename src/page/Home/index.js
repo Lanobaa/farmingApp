@@ -9,34 +9,28 @@ const menus = [
   {
     name: '水肥系统',
     path: '/home/index',
-    key: '1',
-  },
-  {
-    name: '实时值记录',
-    path: '/home',
-    key: '2',
-  },
-  {
-    name: '报警记录',
-    path: '/home',
-    key: '3',
+    key: '1'
   },
   {
     name: '历史记录',
-    path: '/home',
-    key: '4',
+    path: '/home/list',
+    key: '2'
+  },
+  {
+    name: '报警记录',
+    path: '/home/alarm/list',
+    key: '3'
+  },
+  {
+    name: '操作记录',
+    path: '/home/operation/list',
+    key: '4'
   },
   {
     name: '灌溉记录',
-    path: '/home',
-    key: '5',
-  },
-  {
-    name: '申请单管理',
-    path: '/home/list',
-    key: '6',
-  },
-
+    path: '/home/report/list',
+    key: '5'
+  }
 ];
 
 const Home = (props) => {

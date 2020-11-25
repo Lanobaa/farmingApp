@@ -1,9 +1,13 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Form, Row, Col, Input, Button, Select, DatePicker, Table} from 'antd';
 import locale from 'antd/lib/date-picker/locale/zh_CN';
 import 'moment/locale/zh-cn';
 import moment from 'moment';
 import './index.scss';
+import {env} from "../../utils";
+import requestFun from '../../services/fetch';
+const {post} = requestFun;
+
 
 moment.locale('zh-cn');
 
@@ -16,10 +20,9 @@ const OrderList = () => {
     current: 1,
     pageSize: 10,
   });
+  const [dataSource, setDataSource] = useState([]);
 
-  const onFinish = values => {
-    console.log('Received values of form: ', values);
-  };
+
   const formItemLayout = {
     labelCol: {
       span: 6,
@@ -31,19 +34,19 @@ const OrderList = () => {
   const columns = [
     {
       title: '宣传时间',
-      dataIndex: 'time',
+      dataIndex: 'receiveTime',
     },
     {
       title: '申请单号',
-      dataIndex: 'orderId',
+      dataIndex: 'soilId',
     },
     {
       title: '申请人姓名',
-      dataIndex: 'name',
+      dataIndex: 'pointName',
     },
     {
       title: '申请人部门',
-      dataIndex: 'department',
+      dataIndex: 'soilName',
     },
     {
       title: '状态',
@@ -54,100 +57,123 @@ const OrderList = () => {
       dataIndex: 'actions',
     },
   ];
-  const dataSource = [
-    {
-      key: '1',
-      time: '2020/03/18 - 2020/03/18',
-      orderId: 'A10001',
-      name: '离散',
-      department: '企业智能平台',
-      status: '待提交无聊'
-    },
-    {
-      key: '2',
-      time: '2020/03/18 - 2020/03/18',
-      orderId: 'A10001',
-      name: '离散',
-      department: '企业智能平台',
-      status: '待提交无聊'
-    },
-    {
-      key: '3',
-      time: '2020/03/18 - 2020/03/18',
-      orderId: 'A10001',
-      name: '离散',
-      department: '企业智能平台',
-      status: '待提交无聊'
-    },
-    {
-      key: '4',
-      time: '2020/03/18 - 2020/03/18',
-      orderId: 'A10001',
-      name: '离散',
-      department: '企业智能平台',
-      status: '待提交无聊'
-    },
-    {
-      key: '5',
-      time: '2020/03/18 - 2020/03/18',
-      orderId: 'A10001',
-      name: '离散',
-      department: '企业智能平台',
-      status: '待提交无聊'
-    },
-    {
-      key: '6',
-      time: '2020/03/18 - 2020/03/18',
-      orderId: 'A10001',
-      name: '离散',
-      department: '企业智能平台',
-      status: '待提交无聊'
-    },
-    {
-      key: '7',
-      time: '2020/03/18 - 2020/03/18',
-      orderId: 'A10001',
-      name: '离散',
-      department: '企业智能平台',
-      status: '待提交无聊'
-    },
-    {
-      key: '8',
-      time: '2020/03/18 - 2020/03/18',
-      orderId: 'A10001',
-      name: '离散',
-      department: '企业智能平台',
-      status: '待提交无聊'
-    },
-    {
-      key: '9',
-      time: '2020/03/18 - 2020/03/18',
-      orderId: 'A10001',
-      name: '离散',
-      department: '企业智能平台',
-      status: '待提交无聊'
-    },
-    {
-      key: '10',
-      time: '2020/03/18 - 2020/03/18',
-      orderId: 'A10001',
-      name: '离散',
-      department: '企业智能平台',
-      status: '待提交无聊'
-    },
-    {
-      key: '11',
-      time: '2020/03/18 - 2020/03/18',
-      orderId: 'A10001',
-      name: '离散',
-      department: '企业智能平台',
-      status: '待提交无聊'
-    },
-  ];
+  // const dataSource = [
+  //   {
+  //     key: '1',
+  //     time: '2020/03/18 - 2020/03/18',
+  //     orderId: 'A10001',
+  //     name: '离散',
+  //     department: '企业智能平台',
+  //     status: '待提交无聊'
+  //   },
+  //   {
+  //     key: '2',
+  //     time: '2020/03/18 - 2020/03/18',
+  //     orderId: 'A10001',
+  //     name: '离散',
+  //     department: '企业智能平台',
+  //     status: '待提交无聊'
+  //   },
+  //   {
+  //     key: '3',
+  //     time: '2020/03/18 - 2020/03/18',
+  //     orderId: 'A10001',
+  //     name: '离散',
+  //     department: '企业智能平台',
+  //     status: '待提交无聊'
+  //   },
+  //   {
+  //     key: '4',
+  //     time: '2020/03/18 - 2020/03/18',
+  //     orderId: 'A10001',
+  //     name: '离散',
+  //     department: '企业智能平台',
+  //     status: '待提交无聊'
+  //   },
+  //   {
+  //     key: '5',
+  //     time: '2020/03/18 - 2020/03/18',
+  //     orderId: 'A10001',
+  //     name: '离散',
+  //     department: '企业智能平台',
+  //     status: '待提交无聊'
+  //   },
+  //   {
+  //     key: '6',
+  //     time: '2020/03/18 - 2020/03/18',
+  //     orderId: 'A10001',
+  //     name: '离散',
+  //     department: '企业智能平台',
+  //     status: '待提交无聊'
+  //   },
+  //   {
+  //     key: '7',
+  //     time: '2020/03/18 - 2020/03/18',
+  //     orderId: 'A10001',
+  //     name: '离散',
+  //     department: '企业智能平台',
+  //     status: '待提交无聊'
+  //   },
+  //   {
+  //     key: '8',
+  //     time: '2020/03/18 - 2020/03/18',
+  //     orderId: 'A10001',
+  //     name: '离散',
+  //     department: '企业智能平台',
+  //     status: '待提交无聊'
+  //   },
+  //   {
+  //     key: '9',
+  //     time: '2020/03/18 - 2020/03/18',
+  //     orderId: 'A10001',
+  //     name: '离散',
+  //     department: '企业智能平台',
+  //     status: '待提交无聊'
+  //   },
+  //   {
+  //     key: '10',
+  //     time: '2020/03/18 - 2020/03/18',
+  //     orderId: 'A10001',
+  //     name: '离散',
+  //     department: '企业智能平台',
+  //     status: '待提交无聊'
+  //   },
+  //   {
+  //     key: '11',
+  //     time: '2020/03/18 - 2020/03/18',
+  //     orderId: 'A10001',
+  //     name: '离散',
+  //     department: '企业智能平台',
+  //     status: '待提交无聊'
+  //   },
+  // ];
   const handleTableChange = pagination => {
     console.log('is-pa-', pagination);
     setPagination(pagination);
   };
+  async function initUserListData(val = {
+    soilId: '',
+    startTime: '',
+    endTime: '',
+    limit: '',
+  }) {
+    const res = await post(`${env.api}/soil/table/curValue`, val);
+    const {success, object} = res;
+    if (success) {
+      setDataSource(object);
+    }
+  }
+  const onFinish = async values => {
+    console.log('Received values of form: ', values);
+    const res = await initUserListData(values);
+    const {success, object} = res;
+    if (success) {
+      setDataSource(object);
+    }
+  };
+  useEffect(async () => {
+    await initUserListData()
+  }, []);
 
   return (
       <div className="list">
@@ -164,7 +190,7 @@ const OrderList = () => {
             <Row>
               <Col span={8}>
                 <Form.Item
-                    name="orderId"
+                    name="soilId"
                     label="申请单号"
                     rules={[
                       {
@@ -173,12 +199,12 @@ const OrderList = () => {
                       },
                     ]}
                 >
-                  <Input placeholder="请输入申请单号" />
+                  <Input placeholder="请输入申请单号"/>
                 </Form.Item>
               </Col>
               <Col span={8}>
                 <Form.Item
-                    name="name"
+                    name="soilName"
                     label="申请人姓名"
                     rules={[
                       {
@@ -187,7 +213,7 @@ const OrderList = () => {
                       },
                     ]}
                 >
-                  <Input placeholder="请输入申请单号" />
+                  <Input placeholder="请输入申请单号"/>
                 </Form.Item>
               </Col>
               <Col span={8}>
@@ -251,6 +277,7 @@ const OrderList = () => {
           <Table
               loading={loading}
               dataSource={dataSource}
+              rowKey={(record, i) => i}
               columns={columns}
               pagination={pagination}
               onChange={handleTableChange}

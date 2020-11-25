@@ -1,4 +1,5 @@
-import React, {useRef, useState, useEffect, message} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
+import {message} from 'antd';
 import './index.scss';
 import pump from '../../assets/pump.png';
 import meter from '../../assets/meter.png';
@@ -88,22 +89,143 @@ const SketchMap = () => {
   const [active5, setActive5] = useState(false);
 
   const [data, setData] = useState({
-    ST: '',
-    SM: '',
-    IF: '',
-    OF: '',
-    IW: '',
-    OW: '',
-    WP: '',
-    FP: '',
-    FS: '',
-    FPW: '',
-    WPW: '',
-    MPP: '',
-    FC: '',
+    ST: '', SM: '', IF: '', OF: '',
+    IW: '', OW: '', WP: '', FP: '', FS: '', FPW: '',
+    WPW: '', MPP: '', FC: '',
   });
+  const [soil, setSoil] = useState({});
+  const [chart, setChart] = useState({});
 
   const speed = 10;
+
+  const drawInWaterSwitch = () => {
+    let onePoints = [
+      [0, 100],
+      [350, 100],
+      [350, 50],
+      [580, 50],
+    ];
+    if (active1) {
+      lineMove(onePoints, '#DDD', '#DDD', 0, 100, 580, 50);
+      setActive1(false);
+    } else {
+      lineMove(onePoints, '#8BB5FF', '#193ffe', 0, 100, 580, 50);
+      setActive1(true);
+    }
+  };
+  const inWaterSwitch = async () => {
+    await setOperationFn({
+      pointId: data['idIW'],
+      value: active1 ? '0' : '1'
+    });
+  };
+
+  const drawOutWaterSwitch = () => {
+    let twoPoints = [
+      [600, 50],
+      [890, 50],
+      [890, 100],
+      [980, 100],
+    ];
+    if (active2) {
+      setActive2(false);
+      lineMove(twoPoints, '#DDD', '#DDD', 600,50, 980, 100);
+    } else {
+      setActive2(true);
+      lineMove(twoPoints, '#8BB5FF', '#193ffe', 600,50, 980, 100);
+    }
+  };
+  const outWaterSwitch = async () => {
+    drawOutWaterSwitch();
+    await setOperationFn({
+      pointId: data[`idOW`],
+      value: active2 ? '0' : '1'
+    });
+  };
+
+  const drawOpenSwitch = () => {
+    let fourPoints = [
+      [1000, 87],
+      [1350, 87],
+      [1350, 237],
+    ];
+    if (active3) {
+      lineMove(fourPoints, '#DDD', '#DDD', 1000,80, 1350, 237);
+      setActive3(false);
+    } else {
+      lineMove(fourPoints, '#8BB5FF', '#193ffe', 1000,80, 1350, 237);
+      setActive3(true);
+    }
+  };
+  const openSwitch = async () => {
+    drawOpenSwitch();
+    await setOperationFn({
+      pointId: data[`idFP`],
+      value: active3 ? '0' : '1'
+    })
+  };
+
+  const drawManureSwitch = () => {
+    let threePoints = [
+      [190, 270],
+      [840, 270],
+      [840, 50],
+      [890, 50],
+      [890, 100],
+      [980, 100],
+    ];
+    if (active5) {
+      setActive5(false);
+      lineMove(threePoints, '#DDD', '#DDD', 190,270, 980, 100);
+    } else {
+      setActive5(true);
+      lineMove(threePoints, '#8BB5FF', '#193ffe', 190,270, 980, 100);
+    }
+  };
+  const manureSwitch = async () => {
+    drawManureSwitch();
+    await setOperationFn({
+      pointId: data[`idIF`],
+      value: active5 ? '0' : '1'
+    });
+  };
+
+  const drawOutManureSwitch = () => {
+    outManureSwitch2();
+    let fivePoints = [
+      [1350, 250],
+      [1350, 430],
+      [1070, 430],
+      [1070, 498],
+    ];
+
+    if (active4) {
+      lineMove(fivePoints, '#DDD', '#DDD', 1350,250, 1070, 490);
+      setActive4(false);
+    } else {
+      lineMove(fivePoints, '#8BB5FF', '#193ffe', 1350,250, 1070, 490);
+      setActive4(true);
+    }
+  };
+  const outManureSwitch2 = () => {
+    let sixPoints = [
+      [1350, 250],
+      [1350, 430],
+      [290, 430],
+      [290, 498],
+    ];
+    if (active4) {
+      lineMove(sixPoints, '#DDD', '#DDD', 1350,250, 290, 490);
+    } else {
+      lineMove(sixPoints, '#8BB5FF', '#193ffe', 1350,250, 290, 490);
+    }
+  };
+  const outManureSwitch = async () => {
+    await drawOutManureSwitch({
+      pointId: data['idOF'],
+      value: active4 ? '' : '1'
+    })
+  };
 
   // 初始化接口
   const initGetSoils = async id => {
@@ -117,13 +239,20 @@ const SketchMap = () => {
       });
       setData(dataObj);
 
-      if (dataObj.IF === '开') { manureSwitch() }
-      if (dataObj.OF === '开') { outManureSwitch() }
-      if (dataObj.IW === '开') { inWaterSwitch() }
-      if (dataObj.OW === '开') { outWaterSwitch() }
-      if (dataObj.FP === '开') { openSwitch() }
+      if (dataObj.IF === '开') { drawManureSwitch() }
+      if (dataObj.OF === '开') { drawOutManureSwitch() }
+      if (dataObj.IW === '开') { drawInWaterSwitch() }
+      if (dataObj.OW === '开') { drawOutWaterSwitch() }
+      if (dataObj.FP === '开') { drawOpenSwitch() }
     }
+  };
 
+  const initEChartsData = async id => {
+    const res = await get(`${env.api}/soil/home/chat/${id}`)
+    const {success, object} = res;
+    if (success) {
+      setChart(object);
+    }
   };
 
   const setOperationFn = async obj => {
@@ -142,15 +271,20 @@ const SketchMap = () => {
     } else {
       console.log('您的浏览器不支持Canvas')
     }
-    const initSoils = async () => {
+  }, []);
+
+  useEffect(async () => {
+    async function initSoils() {
       const res = await get(`${env.api}/soil/home/all/soils`);
       const {success, object = []} = res;
       if (success) {
         // initGetSoils(object[0].id)
-        initGetSoils('O0');
+        setSoil(object);
+        await initGetSoils('O0');
+        await initEChartsData('O0');
       }
-    };
-    initSoils();
+    }
+    await initSoils();
   }, []);
 
   const drawLines = (ctx, x1, y1, x2, y2) => {
@@ -165,6 +299,7 @@ const SketchMap = () => {
 
   const lineMove = (points, color1, color2, cx1, cy1, cx2,cy2) => {
     let ele = canvasRef.current;
+    if (!ele) {return};
     let ctx = ele.getContext('2d');
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
@@ -203,112 +338,6 @@ const SketchMap = () => {
     window.requestAnimationFrame(function() {
       lineMove(points, color1, color2,  cx1, cy1, cx2,cy2);
     })
-  };
-
-  const inWaterSwitch = () => {
-    let onePoints = [
-      [0, 100],
-      [350, 100],
-      [350, 50],
-      [580, 50],
-    ];
-    if (active1) {
-      lineMove(onePoints, '#DDD', '#DDD', 0, 100, 580, 50);
-      setActive1(false);
-    } else {
-      lineMove(onePoints, '#8BB5FF', '#193ffe', 0, 100, 580, 50);
-      setActive1(true);
-    }
-  };
-
-  const outWaterSwitch = () => {
-    let twoPoints = [
-      [600, 50],
-      [890, 50],
-      [890, 100],
-      [980, 100],
-    ];
-
-    if (active2) {
-      setActive2(false);
-      lineMove(twoPoints, '#DDD', '#DDD', 600,50, 980, 100);
-      // setOperationFn({
-      //   pointId: data[`idOW`],
-      //   value: 0
-      // });
-    } else {
-      setActive2(true);
-      lineMove(twoPoints, '#8BB5FF', '#193ffe', 600,50, 980, 100);
-      // setOperationFn({
-      //   pointId: data[`idOW`],
-      //   value: 0
-      // });
-    }
-  };
-
-  const openSwitch = () => {
-    let fourPoints = [
-      [1000, 87],
-      [1350, 87],
-      [1350, 237],
-    ];
-    if (active3) {
-      lineMove(fourPoints, '#DDD', '#DDD', 1000,80, 1350, 237);
-      setActive3(false);
-    } else {
-      lineMove(fourPoints, '#8BB5FF', '#193ffe', 1000,80, 1350, 237);
-      setActive3(true);
-    }
-  };
-
-  const manureSwitch = () => {
-    let threePoints = [
-      [190, 270],
-      [840, 270],
-      [840, 50],
-      [890, 50],
-      [890, 100],
-      [980, 100],
-    ];
-    if (active5) {
-      setActive5(false);
-      lineMove(threePoints, '#DDD', '#DDD', 190,270, 980, 100);
-    } else {
-      setActive5(true);
-      lineMove(threePoints, '#8BB5FF', '#193ffe', 190,270, 980, 100);
-    }
-  };
-
-  const outManureSwitch = () => {
-    outManureSwitch2();
-    let fivePoints = [
-      [1350, 250],
-      [1350, 430],
-      [1070, 430],
-      [1070, 498],
-    ];
-
-    if (active4) {
-      lineMove(fivePoints, '#DDD', '#DDD', 1350,250, 1070, 490);
-      setActive4(false);
-    } else {
-      lineMove(fivePoints, '#8BB5FF', '#193ffe', 1350,250, 1070, 490);
-      setActive4(true);
-    }
-  };
-
-  const outManureSwitch2 = () => {
-    let sixPoints = [
-      [1350, 250],
-      [1350, 430],
-      [290, 430],
-      [290, 498],
-    ];
-    if (active4) {
-      lineMove(sixPoints, '#DDD', '#DDD', 1350,250, 290, 490);
-    } else {
-      lineMove(sixPoints, '#8BB5FF', '#193ffe', 1350,250, 290, 490);
-    }
   };
 
   return (
@@ -390,7 +419,7 @@ const SketchMap = () => {
             <span>土壤湿度：{data.ST}</span>
           </div>
         </div>
-        <Curve />
+        <Curve data={chart} />
       </div>
   )
 };

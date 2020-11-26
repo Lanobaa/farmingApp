@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Layout, Menu} from 'antd';
+import {Layout, Menu, Button} from 'antd';
 import {Switch, Route} from 'react-router-dom';
 import router from '../../router';
 import './index.scss';
@@ -42,6 +42,9 @@ const Home = (props) => {
     props.history.push(path);
   };
 
+  const logoutSystem = () => {
+    console.log('点击退出');
+  };
   useEffect(() => {
 
   });
@@ -50,17 +53,20 @@ const Home = (props) => {
       <div className="home">
         <Layout>
           <Header>
-            <div style={{width: 1400, margin: 'auto'}}>
-              <div className="logo">智慧农业管控系统</div>
-              <Menu
-                  theme="dark"
-                  mode="horizontal"
-                  selectedKeys={current}
-                  className="menuWater"
-                  onClick={handleClick}
-              >
-                {menus.map(item => <Menu.Item key={item.key}>{item.name}</Menu.Item>)}
-              </Menu>
+            <div className="headerName">
+              <div>
+                <div className="logo">智慧农业管控系统</div>
+                <Menu
+                    theme="dark"
+                    mode="horizontal"
+                    selectedKeys={current}
+                    className="menuWater"
+                    onClick={handleClick}
+                >
+                  {menus.map(item => <Menu.Item key={item.key}>{item.name}</Menu.Item>)}
+                </Menu>
+              </div>
+              <Button type="default" onClick={logoutSystem}>登出</Button>
             </div>
           </Header>
           <Content>

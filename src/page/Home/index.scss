@@ -1,10 +1,26 @@
 .home {
-  .logo {
-    font-size: 22px;
-    color: #fff;
-    float: left;
-    margin-right: 40px;
+  .headerName {
+    width: 1400px;
+    margin: auto;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    & > div {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: flex-start;
+      align-items: center;
+      .logo {
+        font-size: 22px;
+        color: #fff;
+        float: left;
+        margin-right: 40px;
+      }
+    }
+
   }
+
   .menuWater {
     .ant-menu-item-selected {
       position: relative;

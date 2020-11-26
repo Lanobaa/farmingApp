@@ -280,26 +280,23 @@ const SketchMap = () => {
     } else {
       console.log('您的浏览器不支持Canvas')
     }
-  }, []);
 
-  useEffect( () => {
     async function initSoils() {
       const res = await get(`${env.api}/soil/home/all/soils`);
-      const {success, object = []} = res;
+      const {success, object} = res;
       if (success) {
         // initGetSoils(object[0].id)
-        setSoil(object);
-
-        if(isNotNull(soil)){
-          let s = Object.keys(soil[0])[0];
+        if(isNotNull(object)){
+          let s = Object.keys(object[0])[0];
           await initGetSoils(s);
           await initEChartsData(s);
+          setSoil(object);
         }
       }
     }
-
     initSoils();
   }, []);
+
 
   const drawLines = (ctx, x1, y1, x2, y2) => {
     ctx.save();
@@ -315,8 +312,7 @@ const SketchMap = () => {
     let ele = canvasRef.current;
     if (!ele) {
       return
-    }
-    ;
+    };
     let ctx = ele.getContext('2d');
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
@@ -360,7 +356,7 @@ const SketchMap = () => {
   const handleSelectChange = val => {
     console.log('val---',val);
     initGetSoils(val);
-  }
+  };
   return (
       <div className="sketch">
         <div className="s_title">
@@ -371,6 +367,7 @@ const SketchMap = () => {
             <span>当前地块:</span>
             <Select
                 defaultValue={isNotNull(soil) ? Object.keys(soil[0])[0] : ''}
+                key={isNotNull(soil) ? Object.keys(soil[0])[0] : ''}
                 style={{width: '70%'}}
                 onChange={handleSelectChange}
             >

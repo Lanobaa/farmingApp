@@ -373,7 +373,6 @@ const SketchMap = () => {
               {soil.map(item => <Select.Option value={Object.keys(item)[0]} key={Object.keys(item)[0]}>
                 {item[Object.keys(item)]}
               </Select.Option>)}
-
             </Select>
           </b>
           <canvas

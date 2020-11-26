@@ -41,7 +41,7 @@ const LoginPage = props => {
           <section className="section">
             <div className="center">
               <div className="title">
-                <span>智能水肥系统</span>
+                <span>智慧农业管控系统</span>
                 <p>让农业更轻松智能，解放农民的双手</p>
               </div>
               <div className="container">

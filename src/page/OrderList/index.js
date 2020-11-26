@@ -79,6 +79,10 @@ const OrderList = () => {
     }
   }
 
+  const  reset = () => {
+    formRef.current.resetFields();
+  };
+
   const handleTableChange = pagination => {
     // 获取当前表单的参数
     const values = formRef.current.getFieldsValue();
@@ -126,7 +130,7 @@ const OrderList = () => {
   return (
       <div className="list">
         <div className="formHeader">
-          <div className="f_title">申请单管理</div>
+          <div className="f_title">历史数据管理</div>
           <Form
               {...formItemLayout}
               ref={formRef}
@@ -143,13 +147,13 @@ const OrderList = () => {
                     label="地块"
                     rules={[
                       {
-                        message: '请输入申请单号',
+                        message: '请输选择地块',
                       },
                     ]}
                 >
                   <Select
                       showArrow={false}
-                      placeholder="请输入地块..."
+                      placeholder="请选择地块..."
                   >
                     {soils}
                   </Select>
@@ -183,6 +187,7 @@ const OrderList = () => {
                   <Button
                       type="default"
                       style={{marginLeft: 20}}
+                      onClick={reset}
                   >重置</Button>
                 </Form.Item>
               </Col>

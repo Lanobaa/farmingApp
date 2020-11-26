@@ -3,24 +3,35 @@ import {Form, Row, Col, Input, Button, Select, DatePicker, Table} from 'antd';
 import locale from 'antd/lib/date-picker/locale/zh_CN';
 import 'moment/locale/zh-cn';
 import moment from 'moment';
+import {isNotNull} from '../../utils';
 import './index.scss';
 import {env} from "../../utils";
 import requestFun from '../../services/fetch';
-const {post} = requestFun;
+const {get,post} = requestFun;
 
+const defaultSelectDate = {
+  startDate: moment().subtract( 7, 'day' ).hour( 23 ).minute( 59 ).second( 59 ),
+  endDate: moment().endOf( 'day' )
+};
 
+const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 moment.locale('zh-cn');
 
 const {RangePicker} = DatePicker;
 
+const {Option} = Select;
+
 const StatisticsList = () => {
   const [form] = Form.useForm();
+  const formRef = React.createRef()
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
+    total: 1,
   });
   const [dataSource, setDataSource] = useState([]);
+  const [soils, setSoils] = useState([]);
 
 
   const formItemLayout = {
@@ -55,32 +66,81 @@ const StatisticsList = () => {
     }
   ];
 
-  const handleTableChange = pagination => {
-    console.log('is-pa-', pagination);
-    setPagination(pagination);
-  };
-  async function initUserListData(val = {
-    soilId: '',
-    startTime: '',
-    endTime: '',
-    limit: '',
-  }) {
+  async function initUserListData(val) {
     const res = await post(`${env.api}/soil/table/water/statistics`, val);
-    const {success, object} = res;
+    const {success, object, current, pageSize, totalCount} = res;
+    console.log('new-res---', res);
     if (success) {
+      setPagination({
+        current,
+        pageSize,
+        total: totalCount
+      })
       setDataSource(object);
     }
   }
-  const onFinish = async values => {
+
+  const  reset = () => {
+    formRef.current.resetFields();
+  };
+
+  const handleTableChange = pagination => {
+    // 获取当前表单的参数
+    const values = formRef.current.getFieldsValue();
+    const val = {
+      ...values,
+      ...pagination,
+      startTime: isNotNull(values.time) ? moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss') : '',
+      endTime: isNotNull(values.time) ? moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss') : '',
+    };
+    initUserListData(val)
+  };
+
+  const onFinish = values => {
     console.log('Received values of form: ', values);
-    const res = await initUserListData(values);
-    const {success, object} = res;
+    const val = {
+      ...values,
+      ...pagination,
+      startTime: isNotNull(values.time) ? moment(values.time[0]).format('YYYY-MM-DD HH:mm:ss') : '',
+      endTime: isNotNull(values.time) ? moment(values.time[1]).format('YYYY-MM-DD HH:mm:ss') : '',
+    };
+    initUserListData(val);
+  };
+
+  const onExport = () =>{
+    formRef.current.validateFieldsAndScroll( ( err, formValues ) => {
+      if ( err ) {
+        console.error( '导出失败' );
+        console.log( err );
+        return;
+      }
+
+      window.open( `${env.api}/soil/table/water/statistics/export`
+          + ( formValues.status === undefined ? '' : formValues.status )
+          + "&startTime@ge=" + ( formValues.startTime === undefined ? '' : formValues.startTime[ 0 ].format( dateFormat ) )
+          + "&startTime@lt=" + ( formValues.startTime === undefined ? '' : formValues.startTime[ 1 ].format( dateFormat ) ) );
+    } )
+  }
+
+
+
+  const initSelect=async ()=>{
+    const res = await get(`${env.api}/soil/home/all/soils`);
+    const {success, object = []} = res;
     if (success) {
-      setDataSource(object);
+      const  data = [];
+      for( let i in object){
+        for(let key in object[i]){
+          data.push(<Option key={key}>{object[i][key]}</Option>)
+        }
+      }
+      console.log(data);
+      setSoils(data);
     }
   };
   useEffect(async () => {
-    await initUserListData()
+    await initUserListData();
+    await initSelect();
   }, []);
 
   return (
@@ -89,6 +149,7 @@ const StatisticsList = () => {
           <div className="f_title">灌溉统计</div>
           <Form
               {...formItemLayout}
+              ref={formRef}
               form={form}
               onFinish={onFinish}
               initialValues={{
@@ -98,39 +159,38 @@ const StatisticsList = () => {
             <Row>
               <Col span={8}>
                 <Form.Item
-                    name="status"
-                    label="状态"
+                    name="soilId"
+                    label="地块"
                     rules={[
                       {
-                        required: true,
-                        message: '请输入申请单号',
+                        message: '请输选择地块',
                       },
                     ]}
                 >
-                  <Select>
-                    <Select.Option value="0">全部</Select.Option>
-                    <Select.Option value="1">一</Select.Option>
-                    <Select.Option value="2">二</Select.Option>
+                  <Select
+                      showArrow={false}
+                      placeholder="请选择地块..."
+                  >
+                    {soils}
                   </Select>
                 </Form.Item>
               </Col>
-            </Row>
-            <Row>
               <Col span={8}>
                 <Form.Item
                     name="time"
-                    label="操作时间"
+                    label="起止时间"
                     rules={[
                       {
                         type: 'array',
-                        required: true,
                         message: '请选择时间',
                       },
                     ]}
                 >
                   <RangePicker
+                      locale={locale}
                       ranges={{
-                        Today: [moment(), moment()]
+                        '近7天': [ defaultSelectDate.startDate, defaultSelectDate.endDate ],
+                        '近30天': [ moment().subtract( 30, 'day' ).hour( 23 ).minute( 59 ).second( 59 ), defaultSelectDate.endDate ]
                       }}
                       format="YYYY-MM-DD"
                       style={{width: '100%'}}
@@ -143,6 +203,7 @@ const StatisticsList = () => {
                   <Button
                       type="default"
                       style={{marginLeft: 20}}
+                      onClick={reset}
                   >重置</Button>
                 </Form.Item>
               </Col>
@@ -152,7 +213,7 @@ const StatisticsList = () => {
         <div className="f_table">
           <div className="f_top">
             <div className="f_title">灌溉统计列表</div>
-            <Button type="primary">导出</Button>
+            <Button type="primary" onClick={onExport}>导出</Button>
           </div>
           <Table
               loading={loading}

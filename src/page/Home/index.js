@@ -51,7 +51,7 @@ const Home = (props) => {
         <Layout>
           <Header>
             <div style={{width: 1400, margin: 'auto'}}>
-              <div className="logo">智能水肥系统</div>
+              <div className="logo">智慧农业管控系统</div>
               <Menu
                   theme="dark"
                   mode="horizontal"

@@ -1,5 +1,6 @@
 export const env = {
-  api: 'https://www.nmgjdcxzc.cn'
+ // api: window.location.protocol + "//" + window.location.host + "/"
+    api: "https://www.nmgjdcxzc.cn"
 };
 // export const env = {
 //   api: '/api'

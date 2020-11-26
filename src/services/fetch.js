@@ -39,7 +39,7 @@ const judgeOkState = async res => {
   const cloneRes = await res.clone().json();
   //TODO:可以在这里管控全局请求
   if (cloneRes.success !== true) {
-    message.error(`${cloneRes.message}${cloneRes.errorCode}`);
+    message.error(`${cloneRes.message}`);
   }
   console.log('管控全局---', res);
   return res;
@@ -62,8 +62,7 @@ class http {
       credentials: 'include',
       headers: {
         // token: null,
-        // Authorization: 'JSESSIONID=03DD65636FE55038142A9C20BA715279',
-        cookie: 'JSESSIONID=ACCBB20D28642EC6E97D25AD4DFF339F'
+        // Authorization: 'JSESSIONID=03DD65636FE55038142A9C20BA715279'
       },
 
     };

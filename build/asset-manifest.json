@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.css": "/static/css/main.d1d13e44.chunk.css",
+    "main.js": "/static/js/main.a0ad2c42.chunk.js",
+    "main.js.map": "/static/js/main.a0ad2c42.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.8e29d6a2.js",
+    "runtime-main.js.map": "/static/js/runtime-main.8e29d6a2.js.map",
+    "static/js/2.1412a565.chunk.js": "/static/js/2.1412a565.chunk.js",
+    "static/js/2.1412a565.chunk.js.map": "/static/js/2.1412a565.chunk.js.map",
+    "static/js/3.adb00f87.chunk.js": "/static/js/3.adb00f87.chunk.js",
+    "static/js/3.adb00f87.chunk.js.map": "/static/js/3.adb00f87.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/main.d1d13e44.chunk.css.map": "/static/css/main.d1d13e44.chunk.css.map",
+    "static/js/2.1412a565.chunk.js.LICENSE.txt": "/static/js/2.1412a565.chunk.js.LICENSE.txt",
+    "static/media/index.scss": "/static/media/bg.2dc16144.png",
+    "static/media/bucket.98fe6a64.png": "/static/media/bucket.98fe6a64.png",
+    "static/media/farmland1.aab5d5dd.png": "/static/media/farmland1.aab5d5dd.png",
+    "static/media/pool.dcbed41c.png": "/static/media/pool.dcbed41c.png",
+    "static/media/pump.71c9b18f.png": "/static/media/pump.71c9b18f.png",
+    "static/media/w-logo.e79875cb.png": "/static/media/w-logo.e79875cb.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.8e29d6a2.js",
+    "static/js/2.1412a565.chunk.js",
+    "static/css/main.d1d13e44.chunk.css",
+    "static/js/main.a0ad2c42.chunk.js"
+  ]
+}

@@ -282,19 +282,23 @@ const SketchMap = () => {
     }
   }, []);
 
-  useEffect(async () => {
+  useEffect( () => {
     async function initSoils() {
       const res = await get(`${env.api}/soil/home/all/soils`);
       const {success, object = []} = res;
       if (success) {
         // initGetSoils(object[0].id)
         setSoil(object);
-        await initGetSoils('O0');
-        await initEChartsData('O0');
+
+        if(isNotNull(soil)){
+          let s = Object.keys(soil[0])[0];
+          await initGetSoils(s);
+          await initEChartsData(s);
+        }
       }
     }
 
-    await initSoils();
+    initSoils();
   }, []);
 
   const drawLines = (ctx, x1, y1, x2, y2) => {
